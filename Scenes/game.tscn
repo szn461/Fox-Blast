@@ -1,0 +1,130 @@
+[gd_scene load_steps=11 format=3 uid="uid://1yeywft28ouy"]
+
+[ext_resource type="Script" uid="uid://b2yrarijeaq1q" path="res://Script/gamemanager.gd" id="1_3dryh"]
+[ext_resource type="Texture2D" uid="uid://345p0dn4wois" path="res://AssetBundle/Sprites/ForestBackground.png" id="1_ebmjs"]
+[ext_resource type="PackedScene" uid="uid://buyhl04xwd2t4" path="res://Scenes/player.tscn" id="2_qxrlw"]
+[ext_resource type="PackedScene" uid="uid://bctv8hc5mhikp" path="res://Scenes/bigslime.tscn" id="3_i6g32"]
+[ext_resource type="PackedScene" uid="uid://so1e1gxmxi21" path="res://Scenes/Slime.tscn" id="3_wrm1d"]
+[ext_resource type="FontFile" uid="uid://drr2p7wv0m3j4" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="5_wowpa"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_qxrlw"]
+distance = 8.0
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_3dryh"]
+normal = Vector2(0, 1)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wowpa"]
+normal = Vector2(1, 0)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_i6g32"]
+normal = Vector2(-1, 0)
+
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("spawn_timer", "bigslime_timer", "score_label", "gameover_label")]
+y_sort_enabled = true
+script = ExtResource("1_3dryh")
+slime_scene = ExtResource("3_wrm1d")
+bigslime_scene = ExtResource("3_i6g32")
+spawn_timer = NodePath("Timer")
+bigslime_timer = NodePath("Timer2")
+score_label = NodePath("CanvasLayer/Label")
+gameover_label = NodePath("CanvasLayer/gameover")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(-120, 0)
+texture = ExtResource("1_ebmjs")
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(120, 0)
+texture = ExtResource("1_ebmjs")
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-1, -2)
+zoom = Vector2(2.42, 2.42)
+metadata/_edit_lock_ = true
+
+[node name="player" parent="." instance=ExtResource("2_qxrlw")]
+position = Vector2(-165, 80)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(0, 143)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, -5)
+shape = SubResource("WorldBoundaryShape2D_qxrlw")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, -110)
+shape = SubResource("WorldBoundaryShape2D_3dryh")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-235, -92)
+shape = SubResource("WorldBoundaryShape2D_wowpa")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(237, -97)
+shape = SubResource("WorldBoundaryShape2D_i6g32")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 20.0
+offset_top = 14.0
+offset_right = 68.0
+offset_bottom = 37.0
+theme_override_fonts/font = ExtResource("5_wowpa")
+theme_override_font_sizes/font_size = 48
+text = "Score:"
+
+[node name="gameover" type="Label" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -183.5
+offset_top = -44.0
+offset_right = 183.5
+offset_bottom = 44.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.87451, 0, 0, 1)
+theme_override_constants/outline_size = 30
+theme_override_fonts/font = ExtResource("5_wowpa")
+theme_override_font_sizes/font_size = 120
+text = "GAME OVER"
+
+[node name="gameover" type="Label" parent="CanvasLayer/gameover"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -296.0
+offset_top = 55.0
+offset_right = 295.0
+offset_bottom = 175.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.87451, 0, 0, 1)
+theme_override_constants/outline_size = 30
+theme_override_fonts/font = ExtResource("5_wowpa")
+theme_override_font_sizes/font_size = 64
+text = "made by szn"
+horizontal_alignment = 1
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[node name="Timer2" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_spawn_slime"]
